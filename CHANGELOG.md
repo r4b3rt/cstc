@@ -6,6 +6,205 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.3.7] - 2026-07-10
+
+### Added
+* Multiple recipe panels for outgoing requests and incoming responses
+* CSTC menu to Burp's menu bar to show the filter status and edit the filter
+* Verbose syntax information for JSON and XML operations
+* Remove Cookie operation
+* Checkbox to automatically update the Content-Length header in a recipe panel
+* Extension name highlighting when a request or response is sent to the extension
+* Button to delete variables in the variable window
+* Context menu in recipe lanes to add or delete lanes at a certain position
+* Combo box to RSA operations to manually select hash algorithms for digest and MGF1
+* Example use cases to default panels when the extension is loaded for the first time
+
+### Changed
+* Improve the recipe panel layout to keep buttons and checkboxes visible during resizing
+* Improve Read File operation to use a base path where it is allowed to read files
+* Change Deflate and Inflate operations to use Montoya API
+* Refactor Line Extractor and Line Setter operations to use more efficient code and rename their parameters
+* Improve Set HTTP JSON operation to use JsonPath syntax for requests and responses
+* Change message editor panels to use RequestEditor instead of RawEditor
+* Change filter hotkey to work from any message editor tab
+
+### Fixed
+* Fix operation buttons visually glitching on clicks
+* Fix variable matching being non-deterministic in some edge cases
+* Fix IndexOutOfBoundsException in Byte Key operation
+* Fix typos in various parts of the extension
+* Fix duplicate delimiters in combo box of the To Hex operation
+
+
+## [1.3.6] - 2025-08-21
+
+### Added 
+* Add Stop Operation
+* Add Jump Operation
+* Add To Decimal Operation
+* Add From Decimal Operation
+* Add RequestToResponse Operation
+* Add default extension to saving a recipe
+* Add UI element to make auto bake interval user changeable
+* Add PEM format to RSA operations
+* Add hotkey to open Filter dialog (CTRL + SHIFT + F)
+* Add verbose description to DateTime Operation
+* Add new YouTube tutorial to README
+
+
+### Changed
+* Save Recipe Panel's input to Burp state
+* Refactor Filter dialog UI and logic
+* Select "Find anywhere" of Regex Match by default
+* Add Focus Listener to CSTC Formatting tab to always apply current recipe
+
+### Fixed  
+* Fix editing of a lane title throws an exception
+
+
+## [1.3.5] - 2025-03-17
+
+### Added
+
+* Add Remove HTTP Header Operation
+
+### Changed
+
+* Refactor Send Plain Request Operation
+* Refactor Request Builder Operation to allow all HTTP verbs
+* Refactor Set HTTP Cookie Operation
+* Refactor HTTP Cookie Extractor Operation
+* Refactor HTML Encode Operation
+* Refactor HTML Decode Operation
+* Refactor HTTP Body Extractor Operation
+* Refactor Substring Operation
+* Change Recipe Panel to bake empty input
+* Change multiple operations to handle empty input
+* Change context menu items to not bake recipes when selected
+* Refactor Operations Tree to be the same for all Recipe Panel
+* Change operations perform method to parse the message type of its input
+* Add checkbox to Write File Operation to make the new line optional
+
+### Fixed 
+
+* Fix several issues in relation of missing JSON fields in dated recipes
+* Fix recipes being applied again on requests originating from the recipe itself (analog with responses) 
+* Fix Request Builder Operation to add trailing line breaks 
+* Fix logic error in JWT Sign Operation 
+* Fix operations output Null Byte if an exception is thrown
+
+
+## [1.3.4] - 2024-11-01
+
+### Added
+
+* Add functionality to add or remove lanes
+* Add CSTC Formatting Tab to Message Editor to view Formatting output
+* Add Xml Setter Operation
+* Add Strip Operation to remove leading or trailing whitespaces
+* Add Collapse All / Expand All buttons to Operations Tree
+* Add Remove Whitespace Operation
+
+### Changed
+
+* Refactor Http Xml Setter Operation
+* Disable Bake button when Autobake is enabled
+* Refactor Operations Tree for Outgoing/Incoming/Formatting to not contain redundant operations
+
+### Fixed
+
+* Fix UI bug of shifted component layout in Formatting Tab
+* Fix appearance of Null Bytes in various operations
+* Fix possible Race Condition on stored variables with Autobake enabled and Filter active
+
+
+## [1.3.3] - 2024-07-30
+
+### Fixed
+
+* Fix Null Pointer Exception on startup
+
+
+## [1.3.2] - 2024-07-16
+
+### Added
+
+* Add operation JSON Beautifier
+* Add Sequencer filter option
+* Add GZIP operation option to set the compression level
+* Add comment function to operations and recipe lanes
+* Add editable lane names
+
+### Changed
+
+* Fix the emergence of null bytes when using variables
+* Fix GUI issues with using the operation Drag-and-Drop
+* Change the saved recipe structure and add CSTC version, operation comments, lane comments and lane names
+* Refactor operation button icons
+
+
+## [1.3.1] - 2024-05-22
+
+### Added
+
+* Migrate to the new MontoyaAPI provided by Burp
+* Redesign the existing filter selection for better usability
+* Add ability to automatically save recipes in the Burp project file
+* Filter state is now persistent upon restarting Burp / CSTC
+* Add indication / warning if no filter has been selected (CSTC is inactive)
+* Refactor and redesign behavior of "HTTP Request" module and add "Send Plain Request" operation
+* Add an operation to set multipart/form-data parameters
+* Add uppercase and lowercase operations for strings
+* Add an option to URL safe encode and decode Base64 strings
+* Add operation to generate JWT signatures
+* Add operation to count executions of a specific operation / lane
+* Add support for empty IVs in the "AES" operations
+* Add an option to decide whether to append to or overwrite a file in the "File Write" operation
+* Add HTTP/2 support
+* Add operations for SM-2, SM-3, SM-4
+* Change to Java Version 17
+* Add CSTC introduction including demo
+* Add Luhn checksum operation
+* Add string concatenation operation
+
+### Changed
+
+* Fix compatibility issues with Burp's dark theme
+* Fix an issue where CSTC interferes with requests when turned off
+* Fix bugs related to loading and storing recipes
+* Fix implementation of "HTTP Request" operation which caused exceptions
+* Fix and add unit tests
+* Fix UI bugs of the operation tree on the left hand side
+* Refactor extractor and setter operations to match the new API, improve code quality and fix certain bugs (e.g. problem with multiple "Set-Cookie" headers)
+* Fix Filter selection and its application
+* Fix several issues regarding Conditionals
+* Fix Formatting tab changes crashing Repeater tab
+* Fix saving and loading Filter state inside Burp Project
+* Fix Exception handling in Operation's perform method
+* Fix CSTC lanes naming
+* Fix JSON extractor only able to extract single values
+
+
+## [1.3.0] - 2023-03-24
+
+### Added
+
+* Add Extender to the Filter Panel
+* Addition of new Operations
+  * Random Number
+  * Random UUID
+  * String Reverse
+  * String Lowercase and String Uppercase
+* Add clear button to the recipe panel
+
+### Changed
+
+* Fix bug related to insecure handling of XML input data
+* Minor UI enhancements for tiling window managers
+* Update all dependencies
+
+
 ## [1.2.1] - 2020-07-10
 
 ### Changed

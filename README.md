@@ -1,9 +1,4 @@
 
-*Copyright 2017-2020 usd AG*
-
-Licensed under the *GNU General Public License, Version 3.0* (the "License"). You may not use this tool except in compliance with the License.
-You may obtain a copy of the License at https://www.gnu.org/licenses/gpl-3.0.html
-
 ![CSTC](media/CSTC_White_Smaller.png)
 
 ![](https://github.com/usdAG/cstc/workflows/master%20maven%20CI/badge.svg?branch=master)
@@ -77,17 +72,58 @@ installed in *Burp Suite* using the ``Extender->Add->Extensiontype-java`` featur
 The tool uses a GUI which basic idea is similar to the [CyberChef](https://gchq.github.io/CyberChef/). However, it introduces
 a new concept which we call *lanes*. The output of a *CSTC* transformation is always determined
 from the the last *lane* which has an active operation. This initially takes getting used to, but quickly feels intuitive.
-Take a look at our basic tutorial on [YouTube](https://www.youtube.com/watch?v=BUXvWfb_YWU) and make sure to read our initial
+Take a look at our basic tutorial on [YouTube](https://www.youtube.com/watch?v=6fjW4iXj5cg) and make sure to read our initial
 *CSTC* [blog post](https://herolab.usd.de/news-cyber-security-transformation-chef/).
 
 **UPDATE:** Due to some incompatibility issues when installing *CSTC* via *BApp Store*, we had to switch to a new variable prefix.
 Variables from other *lanes* have now to be prefixed by ``$`` e.g. like ``$Outgoing_step1``.
 
+## FAQ
 
-## Known Issues
+### How does the CSTC interact with other Extensions?
 
-Unfortunately, the GUI of some *CSTC Operations* does not really work well together with the **dark theme** of *Burp Suite*. Therefore,
-we recommend to use a **light theme** for the best user experience.
+Requests and responses pass through the extensions in the order that they are listed, from top to bottom (as described [here](https://portswigger.net/burp/documentation/desktop/extensions/managing-extensions)).
+Depending on the extensions in use, it may make sense to adjust the position of the CSTC. If you want to process a request manipulated by the CSTC in another extension,
+the CSTC should be positioned above this extension. Conversely, the CSTC should be positioned below an extension if the CSTC is to work with the response processed by the extension in question.
+Currently the Burp Montoya API doesn't offer a way to change this order automatically, therefore the CSTC cannot influence the interaction with other extensions itself.
+
+### What is the *Formatting* tab in the CSTC about?
+
+The *CSTC Formatting* tab is available in all of Burp's HTTP message editors and shows the result of applying the recipe currently defined in *Formatting* to the content. It has purely a visual effect, the underlying message is not changed. It is intended for testing recipes and for temporarily visualizing changes to the HTTP message using the operations available in the CSTC.
+
+Only the HTTP request message editor in the *Repeater* has an additional tab called *CSTC*. Here, the recipe currently defined in *Outgoing* is applied to the request, making it visible how the request is sent to the server **if** the CSTC is activated for the *Repeater*.
+
+### I have an HTTP request or response that already contains variables defined using the `${name}` syntax. How do I resolve them using CSTC?
+
+You can use the *Concatenate* operation for this. The predefined variable `$input` allows you to access the input of the recipe and output it, with variables being resolved along the way. This works in exactly the same way with text that has already been manipulated in CSTC. Simply save it in a variable and use this in *Concatenate* instead.
+
+### How to Add Custom Operations to the CSTC?
+
+If you're missing an operation in the CSTC, we encourage you to give it a shot at implementing it yourself! 
+It's possible in three easy steps:
+
+1. Copy the below template into a Java class file under `src/main/java/de/usd/cstchef/operations`. The folders here represent the categories. Then change all the placeholders in below template and add your custom operation logic in the `perform()` method.
+
+```java
+import burp.api.montoya.core.ByteArray;
+import de.usd.cstchef.operations.Operation;
+import de.usd.cstchef.operations.Operation.OperationInfos;
+
+@OperationInfos(name = "<NAME OF OPERATION IN LIST>", category = <CATEGORY>, description = "<DESCRIPTION HELP TEXT>")
+public class <CLASSNAME> extends Operation {
+
+    @Override
+    protected ByteArray perform(ByteArray input) throws Exception {
+        <LOGIC>
+    }
+
+}
+```
+
+2. You need to link the class of your operation in the `getOperationsDev()` method in `src/main/java/de/usd/cstchef/Utils.java`. 
+3. Last but not least: Rebuild the project with maven. Now load the "cstc-$version-jar-with-dependencies.jar" from the `target/` folder into Burp manually and you're ready to go. 
+
+Most important: Please open a pull request with your operation to the CSTC, we are highly interested in contributions and new operations making the CSTC better for us all!
 
 ## Feedback
 
